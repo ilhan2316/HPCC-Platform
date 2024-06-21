@@ -2,6 +2,9 @@
 //Cover's data type's supported by ECL and arrow
 
 IMPORT Parquet;
+IMPORT STD;
+
+//All covered ECL data type's tested below
 
 // BOOLEAN type
 ParquetIO.write(DATASET([
@@ -198,3 +201,19 @@ PARALLEL(
     OUTPUT(ParquetIO.read({UNSIGNED testid; STRING3 testname; INTEGER1 value}, '/tmp/Integer1Test.parquet'), NAMED('Integer1Test'))
 
 );
+
+//All covered arrow data type's tested below
+
+IntegersRec := RECORD
+    BOOLEAN null_value;
+    UNSIGNED1 uint8_value;
+    INTEGER1 int8_value;
+    UNSIGNED2 uint16_value;
+    INTEGER2 int16_value;
+    UNSIGNED4 uint32_value;
+    INTEGER4 int32_value;
+END;
+
+integers_ds := ParquetIO.read(IntegersRec, '/var/lib/HPCCSystems/mydropzone/integers.parquet');
+
+OUTPUT(integers_ds, NAMED('IntegersTest'));
