@@ -132,7 +132,8 @@ enum ParquetArrayType
     DecimalType,
     ListType,
     StructType,
-    RealType
+    RealType,
+    fixed_size_binary
 };
 
 /**
@@ -270,6 +271,14 @@ public:
         size = 8;
         return arrow::Status::OK();
     }
+    arrow::Status Visit(const arrow::FixedSizeBinaryArray &array)
+{
+    fixedSizeBinaryArr = &array;
+    type = ParquetArrayType::fixed_size_binary;  
+    size = array.byte_width();
+    return arrow::Status::OK();
+}
+
     arrow::Status Visit(const arrow::StringArray &array)
     {
         stringArr = &array;
@@ -341,6 +350,7 @@ public:
     const arrow::HalfFloatArray *halfFloatArr = nullptr;
     const arrow::FloatArray *floatArr = nullptr;
     const arrow::DoubleArray *doubleArr = nullptr;
+    const arrow::FixedSizeBinaryArray *fixedSizeBinaryArr = nullptr;
     const arrow::StringArray *stringArr = nullptr;
     const arrow::LargeStringArray *largeStringArr = nullptr;
     const arrow::BinaryArray *binArr = nullptr;

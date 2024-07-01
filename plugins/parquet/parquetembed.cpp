@@ -1,3 +1,4 @@
+
 /*##############################################################################
     HPCC SYSTEMS software Copyright (C) 2022 HPCC Systems®.
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -612,6 +613,7 @@ arrow::Status ParquetWriter::openWriteFile()
             destination.insert(destination.find(".parquet"), std::to_string(activityCtx->querySlave()));
         }
 
+        recursiveCreateDirectoryForFile(destination.c_str());
         std::shared_ptr<arrow::io::FileOutputStream> outfile;
         PARQUET_ASSIGN_OR_THROW(outfile, arrow::io::FileOutputStream::Open(destination));
 
@@ -724,13 +726,13 @@ std::shared_ptr<arrow::NestedType> ParquetWriter::makeChildRecord(const RtlField
  * @param arrowFields Output vector for pushing new nodes to.
  * @return Status of the operation
  */
-arrow::Status ParquetWriter::fieldToNode(const RtlFieldInfo *field, std::vector<std::shared_ptr<arrow::Field>> &arrowFields)
-{
+
+arrow::Status ParquetWriter::fieldToNode(const RtlFieldInfo *field, std::vector<std::shared_ptr<arrow::Field>> &arrowFields) {
     StringBuffer name;
     xpathOrName(name, field);
 
-    switch (field->type->getType())
-    {
+ switch (field->type->getType())
+{
     case type_boolean:
         arrowFields.push_back(std::make_shared<arrow::Field>(name.str(), arrow::boolean()));
         break;
@@ -769,10 +771,18 @@ arrow::Status ParquetWriter::fieldToNode(const RtlFieldInfo *field, std::vector<
     case type_unicode:
     case type_varunicode:
     case type_decimal:
-        arrowFields.push_back(std::make_shared<arrow::Field>(name.str(), arrow::utf8())); //TODO add decimal encoding
+        arrowFields.push_back(std::make_shared<arrow::Field>(name.str(), arrow::utf8())); // TODO: add decimal encoding
         break;
     case type_data:
-        arrowFields.push_back(std::make_shared<arrow::Field>(name.str(), arrow::large_binary()));
+        if (field->type->length > 0) // Check for fixed-size binary length
+        {
+            DBGLOG("Handling fixed_size_binary[%d] for field: %s", field->type->length, name.str());
+            arrowFields.push_back(std::make_shared<arrow::Field>(name.str(), arrow::fixed_size_binary(field->type->length)));
+        }
+        else
+        {
+            arrowFields.push_back(std::make_shared<arrow::Field>(name.str(), arrow::large_binary()));
+        }
         break;
     case type_record:
         arrowFields.push_back(std::make_shared<arrow::Field>(name.str(), makeChildRecord(field)));
@@ -782,9 +792,9 @@ arrow::Status ParquetWriter::fieldToNode(const RtlFieldInfo *field, std::vector<
         break;
     default:
         failx("Datatype %i is not compatible with this plugin.", field->type->getType());
-    }
+}
 
-    return arrow::Status::OK();
+return arrow::Status::OK();
 }
 
 /**
@@ -830,6 +840,7 @@ arrow::Status ParquetWriter::fieldsToSchema(const RtlTypeInfo *typeInfo)
 
     return arrow::Status::OK();
 }
+
 
 /**
  * @brief Gets the child ArrayBuilder from the recordBatchBuilder and adds it to the stack.
@@ -1177,6 +1188,8 @@ std::string_view ParquetRowBuilder::getCurrView(const RtlFieldInfo *field)
             return arrayVisitor->largeStringArr->GetView(currArrayIndex());
         case DecimalType:
             return arrayVisitor->size == 128 ? arrayVisitor->decArr->GetView(currArrayIndex()) : arrayVisitor->largeDecArr->GetView(currArrayIndex());
+            case fixed_size_binary:
+            return arrayVisitor->fixedSizeBinaryArr->GetView(currArrayIndex());
         default:
             failx("Unimplemented Parquet type for field with name %s.", field->name);
     }
