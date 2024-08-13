@@ -891,7 +891,6 @@ void ParquetWriter::beginSet(const RtlFieldInfo *field)
     reportIfFailure(largeListBuilder->Append());
 }
 
-
 /**
  * @brief Gets the child ArrayBuilder from the recordBatchBuilder and adds it to the stack.
  */
@@ -1525,18 +1524,11 @@ void ParquetRowBuilder::processBeginSet(const RtlFieldInfo *field, bool &isAll)
         newPathNode.childCount = arrayVisitor->largeListArr->value_slice(currentRow)->length();
         pathStack.push_back(newPathNode);
     }
-    else if (arrayVisitor->type == LargeListType)
-    {
-        ParquetColumnTracker newPathNode(field, arrayVisitor->largeListArr, CPNTSet);
-        newPathNode.childCount = arrayVisitor->largeListArr->value_slice(currentRow)->length();
-        pathStack.push_back(newPathNode);
-    }
     else
     {
         failx("Error reading nested set with name %s.", field->name);
     }
 }
-
 
 /**
  * @brief Checks if we should process another set.
@@ -1641,7 +1633,7 @@ void ParquetRowBuilder::processEndRow(const RtlFieldInfo *field)
  *
  * @param field Information about the context of the field.
  */
- void ParquetRowBuilder::nextFromStruct(const RtlFieldInfo *field)
+void ParquetRowBuilder::nextFromStruct(const RtlFieldInfo *field)
 {
     auto structPtr = pathStack.back().structPtr;
     reportIfFailure(structPtr->Accept(arrayVisitor.get()));
