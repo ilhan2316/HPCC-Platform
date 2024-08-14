@@ -12,11 +12,11 @@
 ############################################################################## */
 
 //class=parquet
-//nothor,noroxie
 
 IMPORT Std;
 IMPORT Parquet;
 
+// Define record layouts
 hiveLayout := RECORD
     INTEGER ID {XPATH('ID')};
     STRING  NAME {XPATH('NAME')};
@@ -30,31 +30,43 @@ dirLayout := RECORD
     STRING  COUNTRY {XPATH('COUNTRY')};
 END;
 
+// File paths
 hiveFilePath1 := '/var/lib/HPCCSystems/mydropzone/hive1.parquet';
-hiveFilePath2 := '/var/lib/HPCCSystems/mydropzone/hive2.parquet';
 dirFilePath1 := '/var/lib/HPCCSystems/mydropzone/directory1.parquet';
-dirFilePath2 := '/var/lib/HPCCSystems/mydropzone/directory2.parquet';
 
+// Read data
 hiveData1 := ParquetIO.Read(hiveLayout, hiveFilePath1);
-hiveData2 := ParquetIO.Read(hiveLayout, hiveFilePath2);
 dirData1 := ParquetIO.Read(dirLayout, dirFilePath1);
-dirData2 := ParquetIO.Read(dirLayout, dirFilePath2);
 
-OUTPUT(hiveData1, NAMED('HiveData1'));
-OUTPUT(hiveData2, NAMED('HiveData2'));
-OUTPUT(dirData1, NAMED('DirData1'));
-OUTPUT(dirData2, NAMED('DirData2'));
+OUTPUT(hiveData1, NAMED('OriginalHiveData'));
+OUTPUT(dirData1, NAMED('OriginalDirData'));
 
-PartitionedHiveData := DISTRIBUTE(hiveData1, ID);
+// Hive Partitioning
+ParquetIO.HivePartition.Write(
+    hiveData1,                                    // Data to write
+    100000,                                       // Row group size
+    '/var/lib/HPCCSystems/mydropzone/hive_partitioned5_new.parquet', // Output path
+    TRUE,                                         // Compression
+    'ID'                                          // Partition column
+);
 
-ParquetIO.HivePartition.Write(PartitionedHiveData, 100000, '/var/lib/HPCCSystems/mydropzone/partitioned_hive_data1/hive_partitioned5_new.parquet', TRUE, 'ID');
-
-HivePartitionResult := IF(COUNT(PartitionedHiveData) > 0, 'Pass: Hive Partitioning', 'Fail: Hive Partitioning');
+ReadBackHiveData := ParquetIO.Read(hiveLayout, '/var/lib/HPCCSystems/mydropzone/hive_partitioned5_new.parquet');
+HivePartitionResult := IF(SORT(hiveData1, ID) = SORT(ReadBackHiveData, ID),
+                          'Pass: Hive Partitioning - Data matches original',
+                          'Fail: Hive Partitioning - Data differs from original');
 OUTPUT(HivePartitionResult, NAMED('HivePartitioningResult'));
 
-PartitionedDirData := DISTRIBUTE(dirData1, ID);
+// Directory Partitioning
+ParquetIO.DirectoryPartition.Write(
+    dirData1,                                    // Data to write
+    100000,                                      // Row group size
+    '/var/lib/HPCCSystems/mydropzone/dir_partitioned5_new.parquet', // Output path
+    TRUE,                                        // Compression
+    'ID'                                         // Partition column
+);
 
-ParquetIO.DirectoryPartition.Write(PartitionedDirData, 100000, '/var/lib/HPCCSystems/mydropzone/partitioned_dir_data1/dir_partitioned5_new.parquet', TRUE, 'ID');
-
-DirectoryPartitionResult := IF(COUNT(PartitionedDirData) > 0, 'Pass: Directory Partitioning', 'Fail: Directory Partitioning');
+ReadBackDirData := ParquetIO.Read(dirLayout, '/var/lib/HPCCSystems/mydropzone/dir_partitioned5_new.parquet');
+DirectoryPartitionResult := IF(SORT(dirData1, ID) = SORT(ReadBackDirData, ID),
+                               'Pass: Directory Partitioning - Data matches original',
+                               'Fail: Directory Partitioning - Data differs from original');
 OUTPUT(DirectoryPartitionResult, NAMED('DirectoryPartitioningResult'));

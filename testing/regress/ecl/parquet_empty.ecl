@@ -12,7 +12,7 @@
 ############################################################################## */
 
 //class=parquet
-//nothor,noroxie
+//fail
 
 //This ECL code reads an empty Parquet file, handling the case where it might be empty
 //by outputting either the file contents or a single informative record if the file is empty.

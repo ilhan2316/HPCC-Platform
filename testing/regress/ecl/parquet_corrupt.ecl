@@ -12,7 +12,6 @@
 ############################################################################## */
 
 //class=parquet
-//nothor,noroxie
 //fail
 
 //This ECL code reads a potentially corrupt Parquet file, handling the case where it might be corrupt

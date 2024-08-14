@@ -12,52 +12,35 @@
 ############################################################################## */
 
 //class=parquet
-//nothor,noroxie
-//fail
-//nokey
 
 IMPORT Std;
 IMPORT Parquet;
 
-initialLayout := RECORD
+// Original layout
+Layout1 := RECORD
     INTEGER id;
     STRING name;
+    REAL salary;
 END;
 
-updatedLayout := RECORD
-    INTEGER id;
+// Reordered layout
+Layout2 := RECORD
     STRING name;
-    INTEGER age;
+    REAL salary;
+    INTEGER id;
 END;
 
-initialFilePath := '/var/lib/HPCCSystems/mydropzone/initial.parquet';
-updatedFilePath := '/var/lib/HPCCSystems/mydropzone/updated.parquet';
+testData := DATASET([
+    { 1, 'Alice', 50000.50 },
+    { 2, 'Bob', 60000.75 }
+], Layout1);
 
-initialData := DATASET([
-    { 1, 'Alice' },
-    { 2, 'Bob' }
-], initialLayout);
+filePath := '/var/lib/HPCCSystems/mydropzone/reorder_test.parquet';
 
-ParquetIO.Write(initialData, initialFilePath, TRUE, 'Snappy');
+// Write using Layout1
+ParquetIO.Write(testData, filePath, TRUE);
 
-// Write updated dataset to another Parquet file
-updatedData := DATASET([
-    { 1, 'Alice', 25 },
-    { 2, 'Bob', 30 }
-], updatedLayout);
+// Read using Layout2
+readData := ParquetIO.Read(Layout2, filePath);
 
-ParquetIO.Write(updatedData, updatedFilePath, TRUE, 'Snappy');
-
-initialRead := ParquetIO.Read(initialLayout, initialFilePath);
-updatedRead := ParquetIO.Read(updatedLayout, updatedFilePath);
-
-// Compare datasets by joining on the common fields
-difference := JOIN(initialRead, updatedRead, LEFT.id = RIGHT.id,
-                   TRANSFORM(RECORDOF(updatedRead),
-                             SELF.id := LEFT.id,
-                             SELF.name := LEFT.name,
-                             SELF.age := RIGHT.age),
-                   LOOKUP);
-
-// Output the results of the comparison
-OUTPUT(difference, NAMED('Differences'));
+OUTPUT(readData, NAMED('ReadData'));

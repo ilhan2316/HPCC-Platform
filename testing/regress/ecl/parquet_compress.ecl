@@ -12,10 +12,6 @@
 ############################################################################## */
 
 //class=parquet
-//nothor
-//noroxie
-//class=embedded
-//class=file
 //version compressionType='UNCOMPRESSED'
 //version compressionType='Snappy'
 //version compressionType='GZip'
@@ -74,20 +70,18 @@ VarunicodeData := DATASET([{100, 'adu', U'Variable-length Unicode: こんにち�
                            {102, 'adw', U'Unicode flexibility is awesome!'}], {UNSIGNED testid, STRING3 testname, VARUNICODE value});
 
 // Write datasets to Parquet files
-SEQUENTIAL(
-    PARALLEL(
-        ParquetIO.write(BooleanData, '/var/lib/HPCCSystems/mydropzone/Boolean.parquet', TRUE, compressionType),
-        ParquetIO.write(IntegerData, '/var/lib/HPCCSystems/mydropzone/Integer.parquet', TRUE, compressionType),
-        ParquetIO.write(RealData, '/var/lib/HPCCSystems/mydropzone/Real.parquet', TRUE, compressionType),
-        ParquetIO.write(DecimalData, '/var/lib/HPCCSystems/mydropzone/Decimal.parquet', TRUE, compressionType),
-        ParquetIO.write(StringData, '/var/lib/HPCCSystems/mydropzone/String.parquet', TRUE, compressionType),
-        ParquetIO.write(QStringData, '/var/lib/HPCCSystems/mydropzone/QString.parquet', TRUE, compressionType),
-        ParquetIO.write(UnicodeData, '/var/lib/HPCCSystems/mydropzone/Unicode.parquet', TRUE, compressionType),
-        ParquetIO.write(UTF8Data, '/var/lib/HPCCSystems/mydropzone/UTF8.parquet', TRUE, compressionType),
-        ParquetIO.write(DataData, '/var/lib/HPCCSystems/mydropzone/Data.parquet', TRUE, compressionType),
-        ParquetIO.write(VarstringData, '/var/lib/HPCCSystems/mydropzone/Varstring.parquet', TRUE, compressionType),
-        ParquetIO.write(VarunicodeData, '/var/lib/HPCCSystems/mydropzone/Varunicode.parquet', TRUE, compressionType)
-    )
+PARALLEL(
+    ParquetIO.write(BooleanData, '/var/lib/HPCCSystems/mydropzone/Boolean.parquet', TRUE, compressionType),
+    ParquetIO.write(IntegerData, '/var/lib/HPCCSystems/mydropzone/Integer.parquet', TRUE, compressionType),
+    ParquetIO.write(RealData, '/var/lib/HPCCSystems/mydropzone/Real.parquet', TRUE, compressionType),
+    ParquetIO.write(DecimalData, '/var/lib/HPCCSystems/mydropzone/Decimal.parquet', TRUE, compressionType),
+    ParquetIO.write(StringData, '/var/lib/HPCCSystems/mydropzone/String.parquet', TRUE, compressionType),
+    ParquetIO.write(QStringData, '/var/lib/HPCCSystems/mydropzone/QString.parquet', TRUE, compressionType),
+    ParquetIO.write(UnicodeData, '/var/lib/HPCCSystems/mydropzone/Unicode.parquet', TRUE, compressionType),
+    ParquetIO.write(UTF8Data, '/var/lib/HPCCSystems/mydropzone/UTF8.parquet', TRUE, compressionType),
+    ParquetIO.write(DataData, '/var/lib/HPCCSystems/mydropzone/Data.parquet', TRUE, compressionType),
+    ParquetIO.write(VarstringData, '/var/lib/HPCCSystems/mydropzone/Varstring.parquet', TRUE, compressionType),
+    ParquetIO.write(VarunicodeData, '/var/lib/HPCCSystems/mydropzone/Varunicode.parquet', TRUE, compressionType)
 );
 
 // Output datasets

@@ -12,7 +12,6 @@
 ############################################################################## */
 
 //class=parquet
-//nothor,noroxie
 //Cover's data type's supported by ECL and arrow
 
 IMPORT Parquet;

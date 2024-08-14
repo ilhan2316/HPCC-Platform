@@ -1,8 +1,12 @@
-<Dataset name='small_dataset'>
+<Dataset name='compare_small'>
+ <Row><compare_small>Pass</compare_small></Row>
 </Dataset>
-<Dataset name='medium_dataset'>
+<Dataset name='compare_medium'>
+ <Row><compare_medium>Pass</compare_medium></Row>
 </Dataset>
-<Dataset name='large_dataset'>
+<Dataset name='compare_large'>
+ <Row><compare_large>Pass</compare_large></Row>
 </Dataset>
-<Dataset name='largest_dataset'>
+<Dataset name='compare_largest'>
+ <Row><compare_largest>Pass</compare_largest></Row>
 </Dataset>

@@ -12,7 +12,6 @@
 ############################################################################## */
 
 //class=parquet
-//nothor,noroxie
 
 IMPORT Parquet;
 IMPORT Std;
