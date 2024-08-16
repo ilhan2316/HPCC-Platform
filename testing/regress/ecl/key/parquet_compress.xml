@@ -1,4 +1,9 @@
 <Dataset name='BooleanData'>
+ <Row><testid>0</testid><testname>aaa</testname><value>true</value></Row>
+ <Row><testid>1</testid><testname>aab</testname><value>false</value></Row>
+ <Row><testid>2</testid><testname>aac</testname><value>true</value></Row>
+ <Row><testid>3</testid><testname>aad</testname><value>false</value></Row>
+ <Row><testid>4</testid><testname>aae</testname><value>true</value></Row>
  <Row><testid>0</testid><testname>aaa</testname><value>false</value></Row>
  <Row><testid>1</testid><testname>aab</testname><value>false</value></Row>
  <Row><testid>2</testid><testname>aac</testname><value>true</value></Row>
@@ -7,18 +12,52 @@
  <Row><testid>10</testid><testname>aai</testname><value>123</value></Row>
  <Row><testid>11</testid><testname>aaj</testname><value>-987</value></Row>
  <Row><testid>12</testid><testname>aak</testname><value>0</value></Row>
+ <Row><testid>300</testid><testname>afa</testname><value>32767</value></Row>
+ <Row><testid>301</testid><testname>afb</testname><value>2147483647</value></Row>
+ <Row><testid>302</testid><testname>afc</testname><value>9223372036854775807</value></Row>
+ <Row><testid>10</testid><testname>aai</testname><value>123</value></Row>
+ <Row><testid>11</testid><testname>aaj</testname><value>-987</value></Row>
+ <Row><testid>12</testid><testname>aak</testname><value>456</value></Row>
+ <Row><testid>13</testid><testname>aal</testname><value>789</value></Row>
+ <Row><testid>14</testid><testname>aam</testname><value>-321</value></Row>
+ <Row><testid>340</testid><testname>afp</testname><value>127</value></Row>
+ <Row><testid>341</testid><testname>afq</testname><value>-128</value></Row>
+ <Row><testid>342</testid><testname>afr</testname><value>0</value></Row>
 </Dataset>
 <Dataset name='RealData'>
  <Row><testid>20</testid><testname>aas</testname><value>3.14</value></Row>
  <Row><testid>21</testid><testname>aat</testname><value>-0.5</value></Row>
  <Row><testid>22</testid><testname>aau</testname><value>123.456</value></Row>
+ <Row><testid>170</testid><testname>adk</testname><value>1.23</value></Row>
+ <Row><testid>171</testid><testname>adl</testname><value>-9.869999999999999</value></Row>
+ <Row><testid>172</testid><testname>adm</testname><value>3.14159265358979</value></Row>
+ <Row><testid>173</testid><testname>adn</testname><value>2.71828182845904</value></Row>
+ <Row><testid>174</testid><testname>ado</testname><value>-1.41421356237309</value></Row>
+ <Row><testid>320</testid><testname>afg</testname><value>1.230000019073486</value></Row>
+ <Row><testid>321</testid><testname>afh</testname><value>-9.869999885559082</value></Row>
+ <Row><testid>322</testid><testname>afi</testname><value>3.141590118408203</value></Row>
+ <Row><testid>30</testid><testname>aas</testname><value>1.23</value></Row>
+ <Row><testid>31</testid><testname>aat</testname><value>-9.869999999999999</value></Row>
+ <Row><testid>32</testid><testname>aau</testname><value>45.67</value></Row>
+ <Row><testid>33</testid><testname>aav</testname><value>78.90000000000001</value></Row>
+ <Row><testid>34</testid><testname>aaw</testname><value>-32.1</value></Row>
 </Dataset>
 <Dataset name='DecimalData'>
  <Row><testid>30</testid><testname>abc</testname><value>123.456789</value></Row>
  <Row><testid>31</testid><testname>abd</testname><value>-987.6543209999999</value></Row>
  <Row><testid>32</testid><testname>abe</testname><value>0.000001</value></Row>
+ <Row><testid>40</testid><testname>aax</testname><value>12.34</value></Row>
+ <Row><testid>41</testid><testname>aay</testname><value>-56.78</value></Row>
+ <Row><testid>42</testid><testname>aaz</testname><value>90.12</value></Row>
+ <Row><testid>43</testid><testname>aba</testname><value>34.56</value></Row>
+ <Row><testid>44</testid><testname>abb</testname><value>-78.9</value></Row>
 </Dataset>
 <Dataset name='StringData'>
+ <Row><testid>50</testid><testname>abc</testname><value>Hello</value></Row>
+ <Row><testid>51</testid><testname>abd</testname><value>World</value></Row>
+ <Row><testid>52</testid><testname>abe</testname><value>Test</value></Row>
+ <Row><testid>53</testid><testname>abf</testname><value>String</value></Row>
+ <Row><testid>54</testid><testname>abg</testname><value>Types</value></Row>
  <Row><testid>40</testid><testname>abm</testname><value>Hello, World!</value></Row>
  <Row><testid>41</testid><testname>abn</testname><value>Data Science</value></Row>
  <Row><testid>42</testid><testname>abo</testname><value>12345</value></Row>
@@ -27,13 +66,28 @@
  <Row><testid>50</testid><testname>abw</testname><value>THIS IS A &quot;Q&quot; STRING.</value></Row>
  <Row><testid>51</testid><testname>abx</testname><value>ANOTHER &quot;EXAMPLE&quot; HERE.</value></Row>
  <Row><testid>52</testid><testname>aby</testname><value>QSTRINGS ARE USEFUL!</value></Row>
+ <Row><testid>80</testid><testname>abr</testname><value>QSTR1</value></Row>
+ <Row><testid>81</testid><testname>abs</testname><value>QSTR2</value></Row>
+ <Row><testid>82</testid><testname>abt</testname><value>QSTR3</value></Row>
+ <Row><testid>83</testid><testname>abu</testname><value>QSTR4</value></Row>
+ <Row><testid>84</testid><testname>abv</testname><value>QSTR5</value></Row>
 </Dataset>
 <Dataset name='UnicodeData'>
  <Row><testid>60</testid><testname>acg</testname><value>こんにちは、世界！</value></Row>
  <Row><testid>61</testid><testname>ach</testname><value>Unicode characters: ḸḹḾ</value></Row>
  <Row><testid>62</testid><testname>aci</testname><value>Ṏ Beautiful Unicode Ṙ</value></Row>
+ <Row><testid>100</testid><testname>acb</testname><value>Unicode1</value></Row>
+ <Row><testid>101</testid><testname>acc</testname><value>Unicode2</value></Row>
+ <Row><testid>102</testid><testname>acd</testname><value>Unicode3</value></Row>
+ <Row><testid>103</testid><testname>ace</testname><value>Unicode4</value></Row>
+ <Row><testid>104</testid><testname>acf</testname><value>Unicode5</value></Row>
 </Dataset>
 <Dataset name='UTF8Data'>
+ <Row><testid>90</testid><testname>abw</testname><value>UTF8_1</value></Row>
+ <Row><testid>91</testid><testname>abx</testname><value>UTF8_2</value></Row>
+ <Row><testid>92</testid><testname>aby</testname><value>UTF8_3</value></Row>
+ <Row><testid>93</testid><testname>abz</testname><value>UTF8_4</value></Row>
+ <Row><testid>94</testid><testname>aca</testname><value>UTF8_5</value></Row>
  <Row><testid>70</testid><testname>acq</testname><value>Café au lait ☕</value></Row>
  <Row><testid>71</testid><testname>acr</testname><value>🎉 UTF-8 Characters 🎉  </value></Row>
  <Row><testid>72</testid><testname>acs</testname><value>Special characters: ©®™</value></Row>
@@ -42,6 +96,11 @@
  <Row><testid>80</testid><testname>ada</testname><value>01A48D8414D848E900</value></Row>
  <Row><testid>81</testid><testname>adb</testname><value>01F48AB446A76F8923</value></Row>
  <Row><testid>82</testid><testname>adc</testname><value>01A48EC793A76F9400</value></Row>
+ <Row><testid>60</testid><testname>abh</testname><value>01234567C289C2ABC38DC3AF</value></Row>
+ <Row><testid>61</testid><testname>abi</testname><value>C3BEC39CC2BAC29876543210</value></Row>
+ <Row><testid>62</testid><testname>abj</testname><value>00C3BF00C3BF00C3BF00C3BF</value></Row>
+ <Row><testid>63</testid><testname>abk</testname><value>C3BF00C3BF00C3BF00C3BF00</value></Row>
+ <Row><testid>64</testid><testname>abl</testname><value>12345678C290C2ABC38DC3AF</value></Row>
 </Dataset>
 <Dataset name='VarstringData'>
  <Row><testid>90</testid><testname>adk</testname><value>Short text</value></Row>

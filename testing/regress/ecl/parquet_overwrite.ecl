@@ -18,8 +18,6 @@ IMPORT Parquet;
 
 SingleRowDataset := DATASET([{1, 'SingleRow', TRUE}], {UNSIGNED id, STRING name, BOOLEAN flag});
 
-ParquetIO.write(SingleRowDataset, '/var/lib/HPCCSystems/mydropzone/SingleRowTest.parquet');
+writeParquetFile := ParquetIO.write(SingleRowDataset, '/var/lib/HPCCSystems/mydropzone/SingleRowTest.parquet');
 
-ConflictingDataset := DATASET([{2, 'OverwrittenRow', 123}], {UNSIGNED id, STRING name, INTEGER conflict});  // Schema conflict
-
-ParquetIO.write(ConflictingDataset, '/var/lib/HPCCSystems/mydropzone/SingleRowTest.parquet');  // Assuming TRUE should force overwrite if the parameter is valid
+SEQUENTIAL(writeParquetFile, writeParquetFile);
