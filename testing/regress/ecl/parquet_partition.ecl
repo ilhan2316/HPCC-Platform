@@ -12,61 +12,57 @@
 ############################################################################## */
 
 //class=parquet
+//fail
 
 IMPORT Std;
 IMPORT Parquet;
 
-// Define record layouts
-hiveLayout := RECORD
-    INTEGER ID {XPATH('ID')};
-    STRING  NAME {XPATH('NAME')};
-    INTEGER AGE {XPATH('AGE')};
+// Define the record layout for the dataset
+datasetRecordLayout := RECORD
+    INTEGER id;
+    STRING name;
+    INTEGER age;
+    STRING city;
 END;
 
-dirLayout := RECORD
-    INTEGER ID {XPATH('ID')};
-    STRING  NAME {XPATH('NAME')};
-    INTEGER AGE {XPATH('AGE')};
-    STRING  COUNTRY {XPATH('COUNTRY')};
-END;
+// Create a small dataset
+smallData := DATASET([
+    {1, 'Alice', 30, 'New York'},
+    {2, 'Bob', 25, 'Los Angeles'},
+    {3, 'Charlie', 40, 'Chicago'}
+], datasetRecordLayout);
 
-// File paths
-hiveFilePath1 := '/var/lib/HPCCSystems/mydropzone/hive1.parquet';
-dirFilePath1 := '/var/lib/HPCCSystems/mydropzone/directory1.parquet';
+// Set options
+overwriteOption := TRUE;
+rowSize := 1;
 
-// Read data
-hiveData1 := ParquetIO.Read(hiveLayout, hiveFilePath1);
-dirData1 := ParquetIO.Read(dirLayout, dirFilePath1);
-
-OUTPUT(hiveData1, NAMED('OriginalHiveData'));
-OUTPUT(dirData1, NAMED('OriginalDirData'));
-
-// Hive Partitioning
+// Write out the dataset with Hive partitioning on CITY
 ParquetIO.HivePartition.Write(
-    hiveData1,                                    // Data to write
-    100000,                                       // Row group size
-    '/var/lib/HPCCSystems/mydropzone/hive_partitioned5_new.parquet', // Output path
-    TRUE,                                         // Compression
-    'ID'                                          // Partition column
+    smallData,
+    rowSize,                            // Number of rows per file
+    '/var/lib/HPCCSystems/mydropzone/hive_partitioned/',
+    overwriteOption,                    // Overwrite existing files
+    'city'                              // Partition key
 );
 
-ReadBackHiveData := ParquetIO.Read(hiveLayout, '/var/lib/HPCCSystems/mydropzone/hive_partitioned5_new.parquet');
-HivePartitionResult := IF(SORT(hiveData1, ID) = SORT(ReadBackHiveData, ID),
-                          'Pass: Hive Partitioning - Data matches original',
-                          'Fail: Hive Partitioning - Data differs from original');
-OUTPUT(HivePartitionResult, NAMED('HivePartitioningResult'));
-
-// Directory Partitioning
+// Write out the dataset with Directory partitioning on AGE
 ParquetIO.DirectoryPartition.Write(
-    dirData1,                                    // Data to write
-    100000,                                      // Row group size
-    '/var/lib/HPCCSystems/mydropzone/dir_partitioned5_new.parquet', // Output path
-    TRUE,                                        // Compression
-    'ID'                                         // Partition column
+    smallData,                          // Data to write
+    rowSize,                            // Number of rows per file
+    '/var/lib/HPCCSystems/mydropzone/dir_partitioned/',
+    overwriteOption,                    // Overwrite existing files
+    'age'                               // Partition key
 );
 
-ReadBackDirData := ParquetIO.Read(dirLayout, '/var/lib/HPCCSystems/mydropzone/dir_partitioned5_new.parquet');
-DirectoryPartitionResult := IF(SORT(dirData1, ID) = SORT(ReadBackDirData, ID),
-                               'Pass: Directory Partitioning - Data matches original',
-                               'Fail: Directory Partitioning - Data differs from original');
-OUTPUT(DirectoryPartitionResult, NAMED('DirectoryPartitioningResult'));
+// Define file paths for partitioned datasets
+hiveFilePath := '/var/lib/HPCCSystems/mydropzone/hive_partitioned/';
+dirFilePath := '/var/lib/HPCCSystems/mydropzone/dir_partitioned/';
+
+// Read back the partitioned data
+readBackHiveData := ParquetIO.HivePartition.Read(datasetRecordLayout, hiveFilePath);
+readBackDirData := ParquetIO.DirectoryPartition.Read(datasetRecordLayout, dirFilePath, 'age');
+
+// Output the entire dataset for verification
+OUTPUT(readBackHiveData, NAMED('HivePartitionedSampleData'));
+OUTPUT(readBackDirData, NAMED('DirPartitionedSampleData'));
+

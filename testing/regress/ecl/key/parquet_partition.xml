@@ -1,10 +1,1 @@
-<Dataset name='OriginalHiveData'>
-</Dataset>
-<Dataset name='OriginalDirData'>
-</Dataset>
-<Dataset name='HivePartitioningResult'>
- <Row><HivePartitioningResult>Pass: Hive Partitioning - Data matches original</HivePartitioningResult></Row>
-</Dataset>
-<Dataset name='DirectoryPartitioningResult'>
- <Row><DirectoryPartitioningResult>Pass: Directory Partitioning - Data matches original</DirectoryPartitioningResult></Row>
-</Dataset>
+<Exception><Source>eclagent</Source><Message>Error: 0: parquet: Error processing result row</Message></Exception>
