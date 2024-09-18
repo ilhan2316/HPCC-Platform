@@ -22,19 +22,16 @@ recordLayout := RECORD
     STRING isactive;
 END;
 
-smallFilePath := '/var/lib/HPCCSystems/mydropzone/small1.parquet';
-mediumFilePath := '/var/lib/HPCCSystems/mydropzone/medium1.parquet';
+// Paths to the files
+singleFilePath := '/var/lib/HPCCSystems/mydropzone/single.parquet';
+multiFilePath := '/var/lib/HPCCSystems/mydropzone/multi*.parquet';  // wildcard for all 3 parts
 
-smallDataset := ParquetIO.Read(recordLayout, smallFilePath);
-largeDataset := ParquetIO.Read(recordLayout, mediumFilePath);
+// Reading the single and multi-part files
+singleDataset := ParquetIO.Read(recordLayout, singleFilePath);
+multiDataset := ParquetIO.Read(recordLayout, multiFilePath);
 
-largeDatasetPart1 := largeDataset[1..33];
-largeDatasetPart2 := largeDataset[34..66];
-largeDatasetPart3 := largeDataset[67..100];
-
-combinedLargeDataset := largeDatasetPart1 + largeDatasetPart2 + largeDatasetPart3;
-
+// Output the datasets
 SEQUENTIAL(
-    OUTPUT(smallDataset, NAMED('small_dataset')),
-    OUTPUT(combinedLargeDataset, NAMED('large_dataset'))
+    OUTPUT(singleDataset, NAMED('singleDataset')),  // Output for the single file
+    OUTPUT(multiDataset, NAMED('multiDataset'))     // Output for the combined multi-part files
 );
