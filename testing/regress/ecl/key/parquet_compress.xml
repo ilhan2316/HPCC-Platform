@@ -3,57 +3,42 @@
  <Row><testid>1</testid><testname>aab</testname><value>false</value></Row>
 </Dataset>
 <Dataset name='IntegerData'>
- <Row><testid>300</testid><testname>afa</testname><value>32767</value></Row>
- <Row><testid>301</testid><testname>afb</testname><value>2147483647</value></Row>
- <Row><testid>302</testid><testname>afc</testname><value>9223372036854775807</value></Row>
- <Row><testid>18446744071562067968</testid><testname>min</testname><value>-2147483648</value></Row>
- <Row><testid>2147483647</testid><testname>max</testname><value>2147483647</value></Row>
- <Row><testid>340</testid><testname>afp</testname><value>127</value></Row>
- <Row><testid>341</testid><testname>afq</testname><value>-128</value></Row>
- <Row><testid>342</testid><testname>afr</testname><value>0</value></Row>
+ <Row><testid>0</testid><testname>min</testname><value>-9223372036854775808</value></Row>
+ <Row><testid>1</testid><testname>max</testname><value>9223372036854775807</value></Row>
 </Dataset>
 <Dataset name='RealData'>
- <Row><testid>170</testid><testname>adk</testname><value>1.23</value></Row>
- <Row><testid>171</testid><testname>adl</testname><value>-9.869999999999999</value></Row>
- <Row><testid>172</testid><testname>ado</testname><value>-1.41421356237309</value></Row>
- <Row><testid>320</testid><testname>afg</testname><value>1.230000019073486</value></Row>
- <Row><testid>321</testid><testname>afh</testname><value>-9.869999885559082</value></Row>
- <Row><testid>322</testid><testname>afi</testname><value>3.141590118408203</value></Row>
+ <Row><testid>0</testid><testname>min</testname><value>2.225073858507201e-308</value></Row>
  <Row><testid>1</testid><testname>max</testname><value>1.797693134862316e+308</value></Row>
- <Row><testid>2</testid><testname>min</testname><value>4.940656458412465e-324</value></Row>
- <Row><testid>3</testid><testname>nor</testname><value>-123.456</value></Row>
 </Dataset>
 <Dataset name='DecimalData'>
- <Row><testid>40</testid><testname>aax</testname><value>12.34</value></Row>
- <Row><testid>41</testid><testname>aay</testname><value>-56.78</value></Row>
- <Row><testid>44</testid><testname>abb</testname><value>0</value></Row>
+ <Row><testid>0</testid><testname>max</testname><value>0</value></Row>
+ <Row><testid>1</testid><testname>min</testname><value>0</value></Row>
 </Dataset>
 <Dataset name='StringData'>
- <Row><testid>50</testid><testname>abc</testname><value>Hello</value></Row>
- <Row><testid>51</testid><testname>abd</testname><value>World</value></Row>
- <Row><testid>54</testid><testname>abg</testname><value>Types</value></Row>
+ <Row><testid>0</testid><testname>emp</testname><value></value></Row>
+ <Row><testid>1</testid><testname>lon</testname><value>This is a long string to test the maximum length of a STRING field in HPCC</value></Row>
 </Dataset>
 <Dataset name='QStringData'>
- <Row><testid>80</testid><testname>abr</testname><value></value></Row>
- <Row><testid>81</testid><testname>abs</testname><value>NORMALSTRING</value></Row>
- <Row><testid>82</testid><testname>abt</testname><value>SPECIAL_  </value></Row>
+ <Row><testid>0</testid><testname>quo</testname><value>STRING WITH &quot;QUOTES&quot; AND SPACES  </value></Row>
+ <Row><testid>1</testid><testname>spe</testname><value>STRING WITH   NEWLINE AND   TAB</value></Row>
 </Dataset>
 <Dataset name='UnicodeData'>
- <Row><testid>100</testid><testname>acb</testname><value>Unicode1</value></Row>
- <Row><testid>101</testid><testname>acc</testname><value>Unicode2</value></Row>
- <Row><testid>104</testid><testname>acf</testname><value>Unicode5</value></Row>
+ <Row><testid>0</testid><testname>mix</testname><value>ASCII and Unicode こんにちは</value></Row>
+ <Row><testid>1</testid><testname>emo</testname><value>Emoji test: 🚀🌟💬😊</value></Row>
 </Dataset>
 <Dataset name='UTF8Data'>
- <Row><testid>90</testid><testname>abw</testname><value>HelloWorld</value></Row>
- <Row><testid>91</testid><testname>abx</testname><value>こんにちは</value></Row>
- <Row><testid>92</testid><testname>aby</testname><value>🚀🌟💬   </value></Row>
+ <Row><testid>0</testid><testname>chi</testname><value>中文测试</value></Row>
+ <Row><testid>1</testid><testname>mix</testname><value>Mix of scripts: АБВ αβγ こんにちは</value></Row>
 </Dataset>
 <Dataset name='DataData'>
- <Row><testid>60</testid><testname>abh</testname><value>0123456789ABCDEF</value></Row>
- <Row><testid>61</testid><testname>abi</testname><value>FEDCBA9876543210</value></Row>
- <Row><testid>64</testid><testname>abl</testname><value>1234567890ABCDEF</value></Row>
+ <Row><testid>0</testid><testname>bin</testname><value>0123456789ABCDEF</value></Row>
+ <Row><testid>1</testid><testname>all</testname><value>00FF</value></Row>
 </Dataset>
 <Dataset name='VarstringData'>
+ <Row><testid>0</testid><testname>sho</testname><value>Short</value></Row>
+ <Row><testid>1</testid><testname>lon</testname><value>This is a longer varstring to test variable-length behavior</value></Row>
 </Dataset>
 <Dataset name='VarunicodeData'>
+ <Row><testid>0</testid><testname>asc</testname><value>ASCII only</value></Row>
+ <Row><testid>1</testid><testname>mix</testname><value>Mixed scripts: Latin, Кириллица, 日本語</value></Row>
 </Dataset>
