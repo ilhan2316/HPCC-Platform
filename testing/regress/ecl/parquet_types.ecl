@@ -23,18 +23,6 @@ RECORDDEF := RECORD
     BOOLEAN value;
 END;
 
-booleanDatasetOut := DATASET([
-    {000, 'aaa', TRUE},
-    {001, 'aab', FALSE}
-], RECORDDEF);
-
-ParquetIO.Write(booleanDatasetOut, '/var/lib/HPCCSystems/mydropzone/BooleanTest.parquet', TRUE);
-
-booleanDatasetIn := ParquetIO.Read(RECORDDEF, '/var/lib/HPCCSystems/mydropzone/BooleanTest.parquet');
-
-joinResult := JOIN(booleanDatasetOut, booleanDatasetIn, LEFT.testid = RIGHT.testid AND LEFT.testname = RIGHT.testname AND LEFT.value = RIGHT.value, TRANSFORM(RECORDDEF, SELF := LEFT));
-
-booleanResult := IF(COUNT(booleanDatasetOut) = COUNT(booleanDatasetIn) AND COUNT(joinResult) = COUNT(booleanDatasetOut), 'Pass', 'Fail');
 
 INTEGER_RECORDDEF := RECORD
     UNSIGNED testid;
@@ -42,44 +30,12 @@ INTEGER_RECORDDEF := RECORD
     INTEGER value;
 END;
 
-integerDatasetOut := DATASET([
-    {-2147483648, 'min', -2147483648},
-    {2147483647, 'max', 2147483647}
-], INTEGER_RECORDDEF);
-
-ParquetIO.Write(integerDatasetOut, '/var/lib/HPCCSystems/mydropzone/IntegerTest.parquet', TRUE);
-
-integerDatasetIn := ParquetIO.Read(INTEGER_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/IntegerTest.parquet');
-
-integerResult := IF(
-    COUNT(integerDatasetOut) = COUNT(integerDatasetIn) AND
-    COUNT(JOIN(integerDatasetOut, integerDatasetIn, LEFT.testid = RIGHT.testid AND LEFT.testname = RIGHT.testname AND LEFT.value = RIGHT.value)) = COUNT(integerDatasetOut),
-    'Pass', 'Fail: Integer data mismatch'
-);
-
 UNSIGNED_RECORDDEF := RECORD
     UNSIGNED testid;
     STRING3 testname;
     UNSIGNED value;
 END;
 
-unsignedDatasetOut := DATASET([
-    {020, 'aan', 0},
-    {021, 'aao', 12345},
-    {022, 'aap', 4294967295}
-], UNSIGNED_RECORDDEF);
-
-ParquetIO.Write(unsignedDatasetOut, '/var/lib/HPCCSystems/mydropzone/UnsignedTest.parquet', TRUE);
-
-unsignedDatasetIn := ParquetIO.Read(UNSIGNED_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/UnsignedTest.parquet');
-
-unsignedResult := IF(
-    COUNT(unsignedDatasetOut) = COUNT(unsignedDatasetIn) AND
-    COUNT(JOIN(unsignedDatasetOut, unsignedDatasetIn, LEFT.testid = RIGHT.testid AND LEFT.testname = RIGHT.testname AND LEFT.value = RIGHT.value)) = COUNT(unsignedDatasetOut),
-    'Pass', 'Fail: Unsigned data mismatch'
-);
-
-// Define schema for REAL type
 REAL_RECORDDEF := RECORD
     UNSIGNED testid;
     STRING3 testname;
@@ -100,6 +56,146 @@ STRING_RECORDDEF := RECORD
     STRING value;
 END;
 
+
+DATA_AS_STRING_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    STRING value;
+END;
+
+DATA_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    DATA value;
+END;
+
+
+// VARSTRING
+VARSTRING_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    VARSTRING value;
+END;
+
+// QSTRING
+QSTRING_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    QSTRING value;
+END;
+
+
+//SET OF INTEGER
+SET_OF_INTEGER_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    SET OF INTEGER value;
+END;
+
+// REAL8
+REAL8_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    REAL8 value;
+END;
+
+// String Set
+SET_OF_STRING_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    SET OF STRING value;
+END;
+
+// Unicode
+SET_OF_UNICODE_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    STRING value;
+END;
+
+// INTEGER8
+INTEGER8_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    INTEGER8 value;
+END;
+
+// UNSIGNED8
+UNSIGNED8_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    STRING value;
+END;
+
+// Real4
+REAL4_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    REAL4 value;
+END;
+
+// Integer
+INTEGER1_RECORDDEF := RECORD
+    UNSIGNED testid;
+    STRING3 testname;
+    INTEGER1 value;
+END;
+
+// Fixed Size Binary
+DATA10_RECORDDEF := RECORD
+    UNSIGNED1 id;
+    STRING3 name;
+    DATA10 value;
+END;
+
+// Large Binary
+LARGE_BINARY_RECORDDEF := RECORD
+    UNSIGNED1 id;
+    STRING3 name;
+    DATA value;
+END;
+
+// Large List
+LIST_RECORDDEF := RECORD
+    UNSIGNED1 id;
+    STRING4 name;
+    STRING value;
+END;
+
+booleanDatasetOut := DATASET([
+    {000, 'aaa', TRUE},
+    {001, 'aab', FALSE}
+], RECORDDEF);
+
+ParquetIO.Write(booleanDatasetOut, '/var/lib/HPCCSystems/mydropzone/BooleanTest.parquet', TRUE);
+booleanDatasetIn := ParquetIO.Read(RECORDDEF, '/var/lib/HPCCSystems/mydropzone/BooleanTest.parquet');
+
+booleanResult := IF(booleanDatasetOut[1] = booleanDatasetIn[1] AND booleanDatasetOut[2] = booleanDatasetIn[2], 'Pass', 'Fail');
+
+integerDatasetOut := DATASET([
+    {-2147483648, 'min', -2147483648},
+    {2147483647, 'max', 2147483647}
+], INTEGER_RECORDDEF);
+
+ParquetIO.Write(integerDatasetOut, '/var/lib/HPCCSystems/mydropzone/IntegerTest.parquet', TRUE);
+
+integerDatasetIn := ParquetIO.Read(INTEGER_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/IntegerTest.parquet');
+
+integerResult := IF(integerDatasetOut[1] = integerDatasetIn[1] AND integerDatasetOut[2] = integerDatasetIn[2], 'Pass', 'Fail');
+
+unsignedDatasetOut := DATASET([
+    {020, 'aan', 0},
+    {021, 'aao', 12345},
+    {022, 'aap', 4294967295}
+], UNSIGNED_RECORDDEF);
+
+ParquetIO.Write(unsignedDatasetOut, '/var/lib/HPCCSystems/mydropzone/UnsignedTest.parquet', TRUE);
+
+unsignedDatasetIn := ParquetIO.Read(UNSIGNED_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/UnsignedTest.parquet');
+
+unsignedResult := IF(unsignedDatasetOut[1] = unsignedDatasetIn[1] AND unsignedDatasetOut[2] = unsignedDatasetIn[2], 'Pass', 'Fail');
+
+
 // REAL type test
 realDatasetOut := DATASET([
     {001, 'maxValue', 1.7976931348623157E+308},
@@ -111,11 +207,7 @@ ParquetIO.Write(realDatasetOut, '/var/lib/HPCCSystems/mydropzone/RealTest.parque
 
 realDatasetIn := ParquetIO.Read(REAL_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/RealTest.parquet');
 
-realResult := IF(
-    COUNT(realDatasetOut) = COUNT(realDatasetIn) AND
-    COUNT(JOIN(realDatasetOut, realDatasetIn, LEFT.testid = RIGHT.testid AND LEFT.testname = RIGHT.testname AND LEFT.value = RIGHT.value)) = COUNT(realDatasetOut),
-    'Pass', 'Fail: Real data mismatch'
-);
+realResult := IF(realDatasetOut[1] = realDatasetIn[1] AND realDatasetOut[2] = realDatasetIn[2], 'Pass', 'Fail');
 
 // DECIMAL type test
 decimalDatasetOut := DATASET([
@@ -128,11 +220,7 @@ ParquetIO.Write(decimalDatasetOut, '/var/lib/HPCCSystems/mydropzone/DecimalTest.
 
 decimalDatasetIn := ParquetIO.Read(DECIMAL_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/DecimalTest.parquet');
 
-decimalResult := IF(
-    COUNT(decimalDatasetOut) = COUNT(decimalDatasetIn) AND
-    COUNT(JOIN(decimalDatasetOut, decimalDatasetIn, LEFT.testid = RIGHT.testid AND LEFT.testname = RIGHT.testname AND LEFT.value = RIGHT.value)) = COUNT(decimalDatasetOut),
-    'Pass', 'Fail: Decimal data mismatch'
-);
+decimalResult := IF(decimalDatasetOut[1] = decimalDatasetIn[1] AND decimalDatasetOut[2] = decimalDatasetIn[2], 'Pass', 'Fail');
 
 // STRING type test
 stringDatasetOut := DATASET([
@@ -145,41 +233,19 @@ ParquetIO.Write(stringDatasetOut, '/var/lib/HPCCSystems/mydropzone/StringTest.pa
 
 stringDatasetIn := ParquetIO.Read(STRING_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/StringTest.parquet');
 
-stringResult := IF(
-    COUNT(stringDatasetOut) = COUNT(stringDatasetIn) AND
-    COUNT(JOIN(stringDatasetOut, stringDatasetIn, LEFT.testid = RIGHT.testid AND LEFT.testname = RIGHT.testname AND LEFT.value = RIGHT.value)) = COUNT(stringDatasetOut),
-    'Pass', 'Fail: String data mismatch'
-);
+stringResult := IF(stringDatasetOut[1] = stringDatasetIn[1] AND stringDatasetOut[2] = stringDatasetIn[2], 'Pass', 'Fail');
 
-// Define record structure for DATA_AS_STRING
-DATA_AS_STRING_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    STRING value;
-END;
-
-// Create and write dataset with DATA_AS_STRING values
-ParquetIO.Write(DATASET([
+dataAsStringDatasetOut := DATASET([
     {060, 'abh', (STRING)X'0123456789ABCDEF'},
     {061, 'abi', (STRING)X'FEDCBA9876543210'},
     {062, 'abj', (STRING)X'00FF00FF00FF00FF'}
-], DATA_AS_STRING_RECORDDEF), '/var/lib/HPCCSystems/mydropzone/DataTest.parquet', TRUE);
+], DATA_AS_STRING_RECORDDEF);
 
-// Read the dataset from the Parquet file
+ParquetIO.Write(dataAsStringDatasetOut, '/var/lib/HPCCSystems/mydropzone/DataTest.parquet', TRUE);
+
 dataAsStringDatasetIn := ParquetIO.Read(DATA_AS_STRING_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/DataTest.parquet');
 
-// Check result
-dataAsStringResult := IF(
-    COUNT(dataAsStringDatasetIn) = 5,
-    'Pass', 'Fail: Data type data count mismatch'
-);
-
-// DATA type test
-DATA_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    DATA value;
-END;
+dataAsStringResult := IF(dataAsStringDatasetOut[1] = dataAsStringDatasetIn[1] AND dataAsStringDatasetOut[2] = dataAsStringDatasetIn[2], 'Pass', 'Fail');
 
 dataDatasetOut := DATASET([
     {060, 'abh', X'0123456789ABCDEF'},
@@ -191,18 +257,7 @@ ParquetIO.Write(dataDatasetOut, '/var/lib/HPCCSystems/mydropzone/DataTest.parque
 
 dataDatasetIn := ParquetIO.Read(DATA_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/DataTest.parquet');
 
-dataResult := IF(
-    COUNT(dataDatasetOut) = COUNT(dataDatasetIn) AND
-    COUNT(JOIN(dataDatasetOut, dataDatasetIn, LEFT.testid = RIGHT.testid AND LEFT.testname = RIGHT.testname AND LEFT.value = RIGHT.value)) = COUNT(dataDatasetOut),
-    'Pass', 'Fail: Data type data mismatch'
-);
-
-// Define the record schema for VarString
-VARSTRING_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    VARSTRING value;
-END;
+dataResult := IF(dataDatasetOut[1] = dataDatasetIn[1] AND dataDatasetOut[2] = dataDatasetIn[2], 'Pass', 'Fail');
 
 varStringDatasetOut := DATASET([
     {070, 'abm', 'VarString1'},
@@ -211,26 +266,9 @@ varStringDatasetOut := DATASET([
 ], VARSTRING_RECORDDEF);
 
 ParquetIO.Write(varStringDatasetOut, '/var/lib/HPCCSystems/mydropzone/VarStringTest.parquet', TRUE);
-
-// Read the dataset from the Parquet file
 varStringDatasetIn := ParquetIO.Read(VARSTRING_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/VarStringTest.parquet');
 
-// Check result
-varStringResult := IF(
-    COUNT(varStringDatasetOut) = COUNT(varStringDatasetIn) AND
-    COUNT(JOIN(varStringDatasetOut, varStringDatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(varStringDatasetOut),
-    'Pass', 'Fail: VarString data mismatch'
-);
-
-// Define the record schema for QString
-QSTRING_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    QSTRING value;
-END;
+varStringResult := IF(varStringDatasetOut[1] = varStringDatasetIn[1] AND varStringDatasetOut[2] = varStringDatasetIn[2], 'Pass', 'Fail');
 
 qStringDatasetOut := DATASET([
     {080, 'abr', ''},
@@ -240,18 +278,12 @@ qStringDatasetOut := DATASET([
 
 ParquetIO.Write(qStringDatasetOut, '/var/lib/HPCCSystems/mydropzone/QStringTest.parquet', TRUE);
 
-// Read the dataset from the Parquet file
 qStringDatasetIn := ParquetIO.Read(QSTRING_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/QStringTest.parquet');
 
-// Check result
-qStringResult := IF(
-    COUNT(qStringDatasetOut) = COUNT(qStringDatasetIn) AND
-    COUNT(JOIN(qStringDatasetOut, qStringDatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(qStringDatasetOut),
-    'Pass', 'Fail: QString data mismatch'
-);
+qStringResult := IF(qStringDatasetOut[1] = qStringDatasetIn[1] AND 
+                    qStringDatasetOut[2] = qStringDatasetIn[2] AND 
+                    qStringDatasetOut[3] = qStringDatasetIn[3], 
+                    'Pass', 'Fail');
 
 // UTF8 type
 ParquetIO.write(DATASET([
@@ -273,18 +305,10 @@ ParquetIO.write(DATASET([
 unicodeDataset := ParquetIO.Read({UNSIGNED testid; STRING3 testname; UNICODE value}, '/var/lib/HPCCSystems/mydropzone/UnicodeTest.parquet');
 unicodeResult := IF(COUNT(unicodeDataset) = 5, 'Pass', 'Fail: Unicode data count mismatch');
 
-
-
-SET_OF_INTEGER_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    SET OF INTEGER value;
-END;
-
 setOfIntegerDatasetOut := DATASET([
-    {110, 'acg', [1,2,3]},
-    {113, 'acj', [10,11,12]},
-    {114, 'ack', [13,14,15]}
+    {110, 'acg', [1, 2, 3]},
+    {113, 'acj', [10, 11, 12]},
+    {114, 'ack', [13, 14, 15]}
 ], SET_OF_INTEGER_RECORDDEF);
 
 ParquetIO.Write(setOfIntegerDatasetOut, '/var/lib/HPCCSystems/mydropzone/SetOfIntegerTest.parquet', TRUE);
@@ -292,19 +316,11 @@ ParquetIO.Write(setOfIntegerDatasetOut, '/var/lib/HPCCSystems/mydropzone/SetOfIn
 setOfIntegerDatasetIn := ParquetIO.Read(SET_OF_INTEGER_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/SetOfIntegerTest.parquet');
 
 setOfIntegerResult := IF(
-    COUNT(setOfIntegerDatasetOut) = COUNT(setOfIntegerDatasetIn) AND
-    COUNT(JOIN(setOfIntegerDatasetOut, setOfIntegerDatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(setOfIntegerDatasetOut),
+    setOfIntegerDatasetOut[1] = setOfIntegerDatasetIn[1] AND 
+    setOfIntegerDatasetOut[2] = setOfIntegerDatasetIn[2] AND 
+    setOfIntegerDatasetOut[3] = setOfIntegerDatasetIn[3], 
     'Pass', 'Fail: Set of Integer data mismatch'
 );
-
-REAL8_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    REAL8 value;
-END;
 
 real8DatasetOut := DATASET([
     {170, 'adk', 1.23D},
@@ -317,19 +333,11 @@ ParquetIO.Write(real8DatasetOut, '/var/lib/HPCCSystems/mydropzone/Real8Test.parq
 real8DatasetIn := ParquetIO.Read(REAL8_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/Real8Test.parquet');
 
 real8Result := IF(
-    COUNT(real8DatasetOut) = COUNT(real8DatasetIn) AND
-    COUNT(JOIN(real8DatasetOut, real8DatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(real8DatasetOut),
+    real8DatasetOut[1] = real8DatasetIn[1] AND
+    real8DatasetOut[2] = real8DatasetIn[2] AND
+    real8DatasetOut[3] = real8DatasetIn[3],
     'Pass', 'Fail: Real8 data mismatch'
 );
-
-SET_OF_STRING_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    SET OF STRING value;
-END;
 
 setOfStringDatasetOut := DATASET([
     {180, 'adp', ['Set', 'Of', 'String', 'Test']},
@@ -342,19 +350,11 @@ ParquetIO.Write(setOfStringDatasetOut, '/var/lib/HPCCSystems/mydropzone/SetOfStr
 setOfStringDatasetIn := ParquetIO.Read(SET_OF_STRING_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/SetOfStringTest.parquet');
 
 setOfStringResult := IF(
-    COUNT(setOfStringDatasetOut) = COUNT(setOfStringDatasetIn) AND
-    COUNT(JOIN(setOfStringDatasetOut, setOfStringDatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(setOfStringDatasetOut),
+    setOfStringDatasetOut[1] = setOfStringDatasetIn[1] AND
+    setOfStringDatasetOut[2] = setOfStringDatasetIn[2] AND
+    setOfStringDatasetOut[3] = setOfStringDatasetIn[3],
     'Pass', 'Fail: Set of String data mismatch'
 );
-
-SET_OF_UNICODE_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    STRING value;
-END;
 
 setOfUnicodeDatasetOut := DATASET([
     {192, 'adw', U'Á,É,Í,Ó,Ú'},
@@ -367,20 +367,11 @@ ParquetIO.Write(setOfUnicodeDatasetOut, '/var/lib/HPCCSystems/mydropzone/SetOfUn
 setOfUnicodeDatasetIn := ParquetIO.Read(SET_OF_UNICODE_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/SetOfUnicodeTest.parquet');
 
 setOfUnicodeResult := IF(
-    EXISTS(setOfUnicodeDatasetIn) AND
-    COUNT(setOfUnicodeDatasetOut) = COUNT(setOfUnicodeDatasetIn) AND
-    COUNT(JOIN(setOfUnicodeDatasetOut, setOfUnicodeDatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(setOfUnicodeDatasetOut),
-    'Pass','Fail: Set of Unicode data mismatch'
+    setOfUnicodeDatasetOut[1] = setOfUnicodeDatasetIn[1] AND
+    setOfUnicodeDatasetOut[2] = setOfUnicodeDatasetIn[2] AND
+    setOfUnicodeDatasetOut[3] = setOfUnicodeDatasetIn[3],
+    'Pass', 'Fail: Set of Unicode data mismatch'
 );
-
-INTEGER8_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    INTEGER8 value;
-END;
 
 integer8DatasetOut := DATASET([
     {300, 'afa', (INTEGER8)32767},
@@ -393,20 +384,11 @@ ParquetIO.Write(integer8DatasetOut, '/var/lib/HPCCSystems/mydropzone/IntegerSize
 integer8DatasetIn := ParquetIO.Read(INTEGER8_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/IntegerSizesTest.parquet');
 
 integer8Result := IF(
-    EXISTS(integer8DatasetIn) AND
-    COUNT(integer8DatasetOut) = COUNT(integer8DatasetIn) AND
-    COUNT(JOIN(integer8DatasetOut, integer8DatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(integer8DatasetOut),
-    'Pass','Fail: Integer8 data mismatch'
+    integer8DatasetOut[1] = integer8DatasetIn[1] AND
+    integer8DatasetOut[2] = integer8DatasetIn[2] AND
+    integer8DatasetOut[3] = integer8DatasetIn[3],
+    'Pass', 'Fail: Integer8 data mismatch'
 );
-
-UNSIGNED8_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    STRING value;
-END;
 
 unsigned8DatasetOut := DATASET([
     {310, 'afd', (STRING)(UNSIGNED8)65535},
@@ -419,20 +401,11 @@ ParquetIO.Write(unsigned8DatasetOut, '/var/lib/HPCCSystems/mydropzone/UnsignedSi
 unsigned8DatasetIn := ParquetIO.Read(UNSIGNED8_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/UnsignedSizesTest.parquet');
 
 unsigned8Result := IF(
-    EXISTS(unsigned8DatasetIn) AND
-    COUNT(unsigned8DatasetOut) = COUNT(unsigned8DatasetIn) AND
-    COUNT(JOIN(unsigned8DatasetOut, unsigned8DatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(unsigned8DatasetOut),
-    'Pass','Fail: Unsigned8 data mismatch'
+    unsigned8DatasetOut[1] = unsigned8DatasetIn[1] AND
+    unsigned8DatasetOut[2] = unsigned8DatasetIn[2] AND
+    unsigned8DatasetOut[3] = unsigned8DatasetIn[3],
+    'Pass', 'Fail: Unsigned8 data mismatch'
 );
-
-REAL4_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    REAL4 value;
-END;
 
 real4DatasetOut := DATASET([
     {320, 'afg', (REAL4)1.23},
@@ -445,20 +418,11 @@ ParquetIO.Write(real4DatasetOut, '/var/lib/HPCCSystems/mydropzone/Real4Test.parq
 real4DatasetIn := ParquetIO.Read(REAL4_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/Real4Test.parquet');
 
 real4Result := IF(
-    EXISTS(real4DatasetIn) AND
-    COUNT(real4DatasetOut) = COUNT(real4DatasetIn) AND
-    COUNT(JOIN(real4DatasetOut, real4DatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(real4DatasetOut),
-    'Pass','Fail: Real4 data mismatch'
+    real4DatasetOut[1] = real4DatasetIn[1] AND
+    real4DatasetOut[2] = real4DatasetIn[2] AND
+    real4DatasetOut[3] = real4DatasetIn[3],
+    'Pass', 'Fail: Real4 data mismatch'
 );
-
-INTEGER1_RECORDDEF := RECORD
-    UNSIGNED testid;
-    STRING3 testname;
-    INTEGER1 value;
-END;
 
 integer1DatasetOut := DATASET([
     {340, 'afp', 127},
@@ -471,20 +435,11 @@ ParquetIO.Write(integer1DatasetOut, '/var/lib/HPCCSystems/mydropzone/Integer1Tes
 integer1DatasetIn := ParquetIO.Read(INTEGER1_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/Integer1Test.parquet');
 
 integer1Result := IF(
-    EXISTS(integer1DatasetIn) AND
-    COUNT(integer1DatasetOut) = COUNT(integer1DatasetIn) AND
-    COUNT(JOIN(integer1DatasetOut, integer1DatasetIn,
-               LEFT.testid = RIGHT.testid AND
-               LEFT.testname = RIGHT.testname AND
-               LEFT.value = RIGHT.value)) = COUNT(integer1DatasetOut),
+    integer1DatasetOut[1] = integer1DatasetIn[1] AND
+    integer1DatasetOut[2] = integer1DatasetIn[2] AND
+    integer1DatasetOut[3] = integer1DatasetIn[3],
     'Pass', 'Fail: Integer1 data mismatch'
 );
-
-DATA10_RECORDDEF := RECORD
-    UNSIGNED1 id;
-    STRING3 name;
-    DATA10 value;
-END;
 
 DATA10 REALToBinary(REAL val) := (DATA10)val;
 
@@ -498,21 +453,10 @@ ParquetIO.Write(dataset_fixed_size_binaryOut, '/var/lib/HPCCSystems/mydropzone/F
 fixedSizeBinaryDatasetIn := ParquetIO.Read(DATA10_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/FixedSizeBinaryTest.parquet');
 
 fixedSizeBinaryResult := IF(
-    EXISTS(fixedSizeBinaryDatasetIn) AND
-    COUNT(dataset_fixed_size_binaryOut) = COUNT(fixedSizeBinaryDatasetIn) AND
-    COUNT(JOIN(dataset_fixed_size_binaryOut, fixedSizeBinaryDatasetIn,
-               LEFT.id = RIGHT.id AND
-               LEFT.name = RIGHT.name AND
-               LEFT.value = RIGHT.value)) = COUNT(dataset_fixed_size_binaryOut),
+    dataset_fixed_size_binaryOut[1] = fixedSizeBinaryDatasetIn[1] AND
+    dataset_fixed_size_binaryOut[2] = fixedSizeBinaryDatasetIn[2],
     'Pass', 'Fail: Fixed Size Binary data mismatch'
 );
-
-// Large Binary
-LARGE_BINARY_RECORDDEF := RECORD
-    UNSIGNED1 id;
-    STRING3 name;
-    DATA value;
-END;
 
 DATA REALToLargeBinary(REAL val) := (DATA)val;
 
@@ -526,21 +470,10 @@ ParquetIO.Write(dataset_large_binaryOut, '/var/lib/HPCCSystems/mydropzone/LargeB
 largeBinaryDatasetIn := ParquetIO.Read(LARGE_BINARY_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/LargeBinaryTest.parquet');
 
 largeBinaryResult := IF(
-    EXISTS(largeBinaryDatasetIn) AND
-    COUNT(dataset_large_binaryOut) = COUNT(largeBinaryDatasetIn) AND
-    COUNT(JOIN(dataset_large_binaryOut, largeBinaryDatasetIn,
-               LEFT.id = RIGHT.id AND
-               LEFT.name = RIGHT.name AND
-               LEFT.value = RIGHT.value)) = COUNT(dataset_large_binaryOut),
-    'Pass','Fail: Large Binary data mismatch'
+    dataset_large_binaryOut[1] = largeBinaryDatasetIn[1] AND
+    dataset_large_binaryOut[2] = largeBinaryDatasetIn[2],
+    'Pass', 'Fail: Large Binary data mismatch'
 );
-
-// Large List
-LIST_RECORDDEF := RECORD
-    UNSIGNED1 id;
-    STRING4 name;
-    STRING value;
-END;
 
 dataset_large_listOut := DATASET([
     {1, 'lst1', 'apple,banana,cherry'},
@@ -553,15 +486,11 @@ ParquetIO.Write(dataset_large_listOut, '/var/lib/HPCCSystems/mydropzone/LargeLis
 largeListDatasetIn := ParquetIO.Read(LIST_RECORDDEF, '/var/lib/HPCCSystems/mydropzone/LargeListTest.parquet');
 
 largeListResult := IF(
-    EXISTS(largeListDatasetIn) AND
-    COUNT(dataset_large_listOut) = COUNT(largeListDatasetIn) AND
-    COUNT(JOIN(dataset_large_listOut, largeListDatasetIn,
-               LEFT.id = RIGHT.id AND
-               LEFT.name = RIGHT.name AND
-               LEFT.value = RIGHT.value)) = COUNT(dataset_large_listOut),
-    'Pass','Fail: Large List data mismatch'
+    dataset_large_listOut[1] = largeListDatasetIn[1] AND
+    dataset_large_listOut[2] = largeListDatasetIn[2] AND
+    dataset_large_listOut[3] = largeListDatasetIn[3],
+    'Pass', 'Fail: Large List data mismatch'
 );
-
 
 PARALLEL(
     OUTPUT(booleanResult, NAMED('BooleanTest'), OVERWRITE),
